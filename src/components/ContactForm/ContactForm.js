@@ -2,9 +2,15 @@ import { Formik, ErrorMessage  } from 'formik';
 import * as Yup from 'yup';
 import { nanoid } from "nanoid";
 import { ImAddressBook, ImUserPlus, ImUser, ImPhone } from "react-icons/im";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 import { Styleform, StyledField, StyledLabel, ErrorMessageStyled, HeroTitleStyled, SubmitBtn } from './ContactForm.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContacts } from 'redux/selectors';
+import { addContact } from 'redux/contactsSlice';
+
 
 const icon ={
     phoneBook: <ImAddressBook/>,
@@ -32,7 +38,30 @@ const schema = Yup.object().shape({
     .max(50, 'Too Long!'),
 });
 
-export const ContactForm = ({onAdd}) => {
+export const ContactForm = () => {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch;
+
+  const onAddContact = newContact => {
+    const existingContact = contacts.find(
+      contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
+    );
+    
+    if (existingContact) {
+      toast.info(`${newContact.name} is already in contacts.`, {
+        position: "top-right",
+        autoClose: 2000,});
+      return;
+    }
+    const newItem = {
+      id: nanoid(),
+      name: newContact.name,
+      number: newContact.number,
+    };
+  const action = addContact(newItem);
+    dispatch(action);
+  };
+  
   return (
     <Formik
       initialValues={{
@@ -42,7 +71,7 @@ export const ContactForm = ({onAdd}) => {
       validationSchema={schema}
       onSubmit={(values, actions) => {
         console.log(values);
-        onAdd({...values, id: nanoid()});
+        onAddContact({...values, id: nanoid()});
         actions.resetForm();
       }}
     >

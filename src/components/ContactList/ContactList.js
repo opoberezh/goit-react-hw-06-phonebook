@@ -1,38 +1,51 @@
-import { ContactsFilter } from '../Filter/Filter';
+import { Filter } from '../Filter/Filter';
 import {ListStyled,  ItemStyled,   DeleteButton, ResetBtn, Wrapper} from './ContactList.styled';
 import {ImUserMinus, ImLoop2} from "react-icons/im";
+
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact,resetDeletedContacts} from 'redux/contactsSlice';
+import { getFilteredContacts } from 'redux/selectors';
+
 
 const icon = {
     minusUser: <ImUserMinus/>,
     reset: <ImLoop2/>
 };
 
-export const ContactList = ({
-  contacts,
-  contactFilter,
-  onChangeFilter,
-  onDeleteContact,
-  onReset,
-}) => {
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(contactFilter.toLowerCase())
-  );
 
+export const ContactList = () => {
+  const filteredContacts = useSelector(getFilteredContacts);
+  console.log(filteredContacts);
+  const dispatch = useDispatch();
+
+  const onDeleteContact = (contactId) => {
+    dispatch(deleteContact(contactId));
+  };
+
+const resetChanges = () => {
+  dispatch(resetDeletedContacts());
+}
+
+if (!Array.isArray(filteredContacts) ||  filteredContacts.length === 0) {
+  console.log(filteredContacts)
+  return null;
+}
   return (
     <Wrapper>
       
-      <ContactsFilter value={contactFilter} onChange={onChangeFilter} />
+      <Filter />
       
       <ListStyled>
-        {filteredContacts.map(contact => (
-          <ItemStyled key={contact.id}>
-            {contact.name}: {contact.number}
-            <DeleteButton onClick={() => onDeleteContact(contact.id)}>{icon.minusUser} Delete</DeleteButton>
+        {filteredContacts.map(({ name, number, id }) => (
+          <ItemStyled key={id}>
+             <span>{name}:</span>
+            <span>{number}</span>
+            <DeleteButton onClick={() => onDeleteContact(id)}>{icon.minusUser} Delete</DeleteButton>
           </ItemStyled>
          
         ))}
       </ListStyled>
-      <ResetBtn onClick={onReset}>{icon.reset}Reset</ResetBtn>
+      <ResetBtn onClick={resetChanges}>{icon.reset}Reset</ResetBtn>
     </Wrapper>
   );
 };

@@ -4,7 +4,7 @@ import { createSelector } from '@reduxjs/toolkit';
 // import 'react-toastify/dist/ReactToastify.css';
 
 
-export const getContacts = store => store.contacts.initialContacts;
+export const getContacts = store => store.contacts.items;
 
 export const getFilter = store => store.filter;
 

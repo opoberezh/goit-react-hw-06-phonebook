@@ -63,7 +63,6 @@ export const ContactForm = () => {
     };
   const action = addContact(newItem);
     dispatch(action);
-    console.log(dispatch(action))
   };
   
   return (

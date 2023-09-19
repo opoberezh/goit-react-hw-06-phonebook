@@ -8,7 +8,7 @@ import initialContacts from '../components/contactsList.json'
 export const contactsSlice = createSlice({
     name: 'contacts',
     initialState: {
-        initialContacts,
+       items: initialContacts,
         deletedContacts: [],
     },
     

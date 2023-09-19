@@ -1,26 +1,17 @@
 // import { store } from "./store";
-import {toast} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { createSelector } from '@reduxjs/toolkit';
+// import {toast} from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
 
 
-export const getContacts = store => store.contacts;
+export const getContacts = store => store.contacts.initialContacts;
 
 export const getFilter = store => store.filter;
 
-export const getFilteredContacts = store => {
-    const { filter, contacts } = store;
-    if (!filter) {
-      return contacts;
-    }
-    const normalizedFilter = filter.toLowerCase();
-    const filteredContacts = contacts.items.filter(contact =>
-        contact.name.toLowerCase().trim().includes((normalizedFilter)) || contact.number.trim().includes((normalizedFilter))
-    );
-  
-    if (normalizedFilter && !filteredContacts.length) {
-      toast.info(`No contacts matching your request`);
-    }
-    return filteredContacts;
+export const getFilteredContacts = createSelector([getContacts, getFilter],(contacts, filter)  => {
+
+  return contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
 }
-
-
+);

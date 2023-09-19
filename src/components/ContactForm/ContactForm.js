@@ -38,6 +38,8 @@ const schema = Yup.object().shape({
     .max(50, 'Too Long!'),
 });
 
+const initialValues = { name: '', number: '' };
+
 export const ContactForm = () => {
   const contacts = useSelector(getContacts);
   const dispatch = useDispatch;
@@ -64,15 +66,13 @@ export const ContactForm = () => {
   
   return (
     <Formik
-      initialValues={{
-        name: '',
-        number: '',
-      }}
+      initialValues={initialValues}
       validationSchema={schema}
       onSubmit={(values, actions) => {
-        console.log(values);
+        console.log('Before resetForm');
         onAddContact({...values, id: nanoid()});
         actions.resetForm();
+        console.log('After resetForm');
       }}
     >
       {({ handleSubmit }) => (

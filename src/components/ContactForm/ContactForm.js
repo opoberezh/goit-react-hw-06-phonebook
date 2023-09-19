@@ -42,13 +42,14 @@ const initialValues = { name: '', number: '' };
 
 export const ContactForm = () => {
   const contacts = useSelector(getContacts);
-  const dispatch = useDispatch;
+  const dispatch = useDispatch();
 
   const onAddContact = newContact => {
     const existingContact = contacts.find(
       contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
+      
     );
-    
+    console.log(newContact)
     if (existingContact) {
       toast.info(`${newContact.name} is already in contacts.`, {
         position: "top-right",
@@ -62,6 +63,7 @@ export const ContactForm = () => {
     };
   const action = addContact(newItem);
     dispatch(action);
+    console.log(dispatch(action))
   };
   
   return (
@@ -69,10 +71,10 @@ export const ContactForm = () => {
       initialValues={initialValues}
       validationSchema={schema}
       onSubmit={(values, actions) => {
-        console.log('Before resetForm');
+        // console.log('Before resetForm');
         onAddContact({...values, id: nanoid()});
         actions.resetForm();
-        console.log('After resetForm');
+        // console.log('After resetForm');
       }}
     >
       {({ handleSubmit }) => (

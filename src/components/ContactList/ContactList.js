@@ -26,8 +26,8 @@ const resetChanges = () => {
   dispatch(resetDeletedContacts());
 }
 
-if (!Array.isArray(filteredContacts) ||  filteredContacts.length === 0) {
-  console.log(filteredContacts)
+if (!Array.isArray(filteredContacts) || filteredContacts.length === 0) {
+  console.log(filteredContacts);
   return null;
 }
   return (
